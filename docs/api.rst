@@ -7,5 +7,8 @@
 API Reference
 #############
 
-.. automodule:: adafruit_ay8912_emulator
+.. automodule:: adafruit_ay8912.ay8912_emulator
+    :members:
+
+.. automodule:: adafruit_ay8912.vgm_player
     :members:
