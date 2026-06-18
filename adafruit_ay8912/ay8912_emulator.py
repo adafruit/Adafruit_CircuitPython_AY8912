@@ -24,9 +24,10 @@ Implementation Notes
 
 import array
 from random import randint
-import ulab.numpy as np
-import synthio
+
 import audiomixer
+import synthio
+import ulab.numpy as np
 
 try:
     from typing import Tuple
@@ -50,19 +51,43 @@ class AY8912:
 
     # AY DAC volume table -- 16 levels
     DAC = (
-        0.0, 0.00999, 0.01445, 0.02106,
-        0.03070, 0.04555, 0.06450, 0.10736,
-        0.12659, 0.20499, 0.29221, 0.37284,
-        0.49253, 0.63532, 0.80558, 1.0,
+        0.0,
+        0.00999,
+        0.01445,
+        0.02106,
+        0.03070,
+        0.04555,
+        0.06450,
+        0.10736,
+        0.12659,
+        0.20499,
+        0.29221,
+        0.37284,
+        0.49253,
+        0.63532,
+        0.80558,
+        1.0,
     )
 
     # Envelope segment functions per shape: (segment0, segment1)
     # 0=decay (start high), 1=attack (start low), 2=hold, 3=hold-alt
     _ENV_SEG = (
-        (0, 2), (0, 2), (0, 2), (0, 2),   # shapes 0-3:   \___
-        (1, 2), (1, 2), (1, 2), (1, 2),   # shapes 4-7:   /|__
-        (0, 0), (0, 2), (0, 1), (0, 3),   # shapes 8-11:  \\\\  \___  \/\/  \^^^
-        (1, 1), (1, 3), (1, 0), (1, 2),   # shapes 12-15: ////  /^^^  /\/\  /|__
+        (0, 2),
+        (0, 2),
+        (0, 2),
+        (0, 2),  # shapes 0-3:   \___
+        (1, 2),
+        (1, 2),
+        (1, 2),
+        (1, 2),  # shapes 4-7:   /|__
+        (0, 0),
+        (0, 2),
+        (0, 1),
+        (0, 3),  # shapes 8-11:  \\\\  \___  \/\/  \^^^
+        (1, 1),
+        (1, 3),
+        (1, 0),
+        (1, 2),  # shapes 12-15: ////  /^^^  /\/\  /|__
     )
 
     def __init__(
@@ -115,8 +140,8 @@ class AY8912:
 
         self._env_shape = 0
         self._env_period = 1
-        self._env_level = 0         # 0..31
-        self._env_segment = 0       # 0 or 1
+        self._env_level = 0  # 0..31
+        self._env_segment = 0  # 0 or 1
         self._env_accumulator = 0.0
         self._env_steps_per_tick = 0.0
         self._compute_env_rate()
@@ -144,9 +169,9 @@ class AY8912:
             self._mixer.voice[i].level = 0.0
 
         # Default ACB stereo panning
-        self._mixer.voice[0].panning = -0.4   # A -> left
-        self._mixer.voice[1].panning = 0.0    # B -> center
-        self._mixer.voice[2].panning = 0.4    # C -> right
+        self._mixer.voice[0].panning = -0.4  # A -> left
+        self._mixer.voice[1].panning = 0.0  # B -> center
+        self._mixer.voice[2].panning = 0.4  # C -> right
 
         self._started = True
 
@@ -235,7 +260,7 @@ class AY8912:
         bit = 1 << channel
         mixer = self._regs[7]
         if enable:
-            mixer &= ~bit      # bit=0 means ON in the AY mixer
+            mixer &= ~bit  # bit=0 means ON in the AY mixer
         else:
             mixer |= bit
         self.write_register(7, mixer)
@@ -324,11 +349,10 @@ class AY8912:
             self._env_enabled[ch] = bool(vreg & 0x10)
             self._apply_volume(ch)
 
-        elif reg in (11, 12):
+        elif reg in {11, 12}:
             # Envelope period
             self._env_period = self._regs[11] | (self._regs[12] << 8)
-            if self._env_period < 1:
-                self._env_period = 1
+            self._env_period = max(self._env_period, 1)
             self._compute_env_rate()
 
         elif reg == 13:
@@ -342,13 +366,10 @@ class AY8912:
     def _period_to_hz(self, period: int) -> float:
         """Convert an AY tone/noise period to Hz, clamped to synthio's valid
         range of 0-32767 Hz."""
-        if period < 1:
-            period = 1
+        period = max(period, 1)
         freq = self._clock / (16.0 * period)
-        if freq > 32767.0:
-            freq = 32767.0
-        if freq < 1.0:
-            freq = 1.0
+        freq = min(freq, 32767.0)
+        freq = max(freq, 1.0)
         return freq
 
     def _update_channel_freq(self, ch: int) -> None:
@@ -358,16 +379,14 @@ class AY8912:
             lo = self._regs[ch * 2]
             hi = self._regs[ch * 2 + 1] & 0x0F
             period = lo | (hi << 8)
-            if period < 1:
-                period = 1
+            period = max(period, 1)
             self._notes[ch].frequency = self._period_to_hz(period)
 
     def _update_mixer_state(self) -> None:
         """Read the mixer register (R7) and update waveforms & frequencies."""
         mixer_reg = self._regs[7]
         noise_period = self._regs[6] & 0x1F
-        if noise_period < 1:
-            noise_period = 1
+        noise_period = max(noise_period, 1)
         noise_hz = self._period_to_hz(noise_period)
 
         for ch in range(3):
@@ -422,17 +441,17 @@ class AY8912:
         func = self._ENV_SEG[self._env_shape][self._env_segment & 1]
         # Decay (0) and hold-alt (3) start at max; attack (1) and hold (2)
         # start at 0.
-        self._env_level = 31 if (func == 0 or func == 3) else 0
+        self._env_level = 31 if func in {0, 3} else 0
 
     def _step_envelope(self) -> None:
         """Advance the envelope by one step."""
         func = self._ENV_SEG[self._env_shape][self._env_segment & 1]
-        if func == 0:       # Decay
+        if func == 0:  # Decay
             self._env_level -= 1
             if self._env_level < 0:
                 self._env_segment ^= 1
                 self._env_reset_segment()
-        elif func == 1:     # Attack
+        elif func == 1:  # Attack
             self._env_level += 1
             if self._env_level > 31:
                 self._env_segment ^= 1

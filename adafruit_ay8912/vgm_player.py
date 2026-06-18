@@ -8,7 +8,7 @@
 VGM chiptune file parser and player for CircuitPython.
 
 Plays VGM (and gzip-compressed VGZ) files through an
-:py:class:`~adafruit_ay8912.ay8912_emulator.AY8912` instance. 
+:py:class:`~adafruit_ay8912.ay8912_emulator.AY8912` instance.
 
 Only files with a non-zero AY-3-8910 clock (header offset ``0x74``) are
 supported. Files targeting other chips (SN76489, YM2612, etc.) are rejected.
@@ -28,7 +28,8 @@ import struct
 import time
 
 try:
-    from typing import Optional, Tuple, TYPE_CHECKING
+    from typing import TYPE_CHECKING, Optional, Tuple
+
     if TYPE_CHECKING:
         from .ay8912_emulator import AY8912
 except ImportError:
@@ -73,12 +74,12 @@ class VGMFile:
         self._version = 0
 
         # Playback state
-        self._pos = 0             # current byte position in command stream
+        self._pos = 0  # current byte position in command stream
         self._playing = False
-        self._sample_clock = 0    # cumulative samples played
+        self._sample_clock = 0  # cumulative samples played
         self._wait_remaining = 0  # samples still to wait
-        self._next_time = 0.0     # monotonic time of next command batch
-        self._loop_count = 0      # how many times we've looped
+        self._next_time = 0.0  # monotonic time of next command batch
+        self._loop_count = 0  # how many times we've looped
 
         if filename:
             self.load(filename)
@@ -187,8 +188,7 @@ class VGMFile:
 
         eof_rel = struct.unpack("<I", data[0x04:0x08])[0]
         self._eof_offset = 0x04 + eof_rel if eof_rel else len(data)
-        if self._eof_offset > len(data):
-            self._eof_offset = len(data)
+        self._eof_offset = min(self._eof_offset, len(data))
 
         self._version = struct.unpack("<I", data[0x08:0x0C])[0]
         self._total_samples = struct.unpack("<I", data[0x18:0x1C])[0]
@@ -228,7 +228,7 @@ class VGMFile:
     def _parse_gd3(self, offset: int) -> None:
         """Parse the GD3 metadata tag (UTF-16LE null-terminated strings)."""
         data = self._data
-        if bytes(data[offset:offset + 4]) != b"Gd3 ":
+        if bytes(data[offset : offset + 4]) != b"Gd3 ":
             return
 
         ptr = offset + 12
@@ -316,10 +316,9 @@ class VGMFile:
         self._sample_clock += wait_samples
         self._next_time += wait_samples / _VGM_RATE
 
-        if self._next_time < now:
-            self._next_time = now
+        self._next_time = max(self._next_time, now)
 
-    def _process_until_wait(self) -> int:
+    def _process_until_wait(self) -> int:  # noqa: PLR0912
         """Execute commands until a wait.
 
         :return: The number of samples to wait, or ``-1`` at end of stream.
@@ -366,7 +365,7 @@ class VGMFile:
             # --- Commands to skip (other chips / unsupported) ---
 
             # 0x4F dd / 0x50 dd -- SN76489 (Game Gear / SMS): 1 data byte
-            elif cmd in (0x4F, 0x50):
+            elif cmd in {0x4F, 0x50}:
                 self._pos += 1
 
             # 0x51-0x5F -- YM chips: 2 data bytes
@@ -403,7 +402,7 @@ class VGMFile:
             elif cmd == 0x67:
                 self._pos += 1  # skip 0x66
                 self._pos += 1  # skip the type byte
-                size = struct.unpack("<I", data[self._pos:self._pos + 4])[0]
+                size = struct.unpack("<I", data[self._pos : self._pos + 4])[0]
                 self._pos += 4 + size
 
             else:
@@ -412,9 +411,7 @@ class VGMFile:
         return -1
 
     def __str__(self) -> str:
-        return "VGM v%X | %s -- %s (%.1fs)" % (
-            self._version,
-            self._title or "Untitled",
-            self._author or "Unknown",
-            self.duration,
+        return (
+            f"VGM v{self._version:X} | {self._title or 'Untitled'} -- "
+            f"{self._author or 'Unknown'} ({self.duration:.1f}s)"
         )
