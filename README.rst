@@ -93,8 +93,8 @@ Usage Example
     import time
     import board
     import audiobusio
-    from adafruit_ay8912_emulator import AY8912
-    from vgm_player import VGMFile
+    from adafruit_ay8912.ay8912_emulator import AY8912
+    from adafruit_ay8912.vgm_player import VGMFile
 
     audio = audiobusio.I2SOut(board.D9, board.D10, board.D11)
 
