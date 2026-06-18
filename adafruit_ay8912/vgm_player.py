@@ -411,7 +411,6 @@ class VGMFile:
         return -1
 
     def __str__(self) -> str:
-        return (
-            f"VGM v{self._version:X} | {self._title or 'Untitled'} -- "
-            f"{self._author or 'Unknown'} ({self.duration:.1f}s)"
-        )
+        title = self._title or "Untitled"
+        author = self._author or "Unknown"
+        return f"VGM v{self._version:X} | {title} -- {author} ({self.duration:.1f}s)"
