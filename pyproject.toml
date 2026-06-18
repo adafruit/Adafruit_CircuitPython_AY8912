@@ -43,7 +43,7 @@ dynamic = ["dependencies", "optional-dependencies"]
 [tool.setuptools]
 # TODO: IF LIBRARY FILES ARE A PACKAGE FOLDER,
 #       CHANGE `py_modules = ['...']` TO `packages = ['...']`
-py-modules = ["adafruit_ay8912_emulator"]
+packages = ["adafruit_ay8912"]
 
 [tool.setuptools.dynamic]
 dependencies = {file = ["requirements.txt"]}
