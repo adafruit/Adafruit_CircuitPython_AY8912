@@ -11,14 +11,14 @@ requires = [
 ]
 
 [project]
-name = "adafruit-circuitpython-ay8912-emulator"
+name = "adafruit-circuitpython-ay8912"
 description = "CircuitPython synthio helper library for AY8912/AY-3-8910 emulation"
 version = "0.0.0+auto.0"
 readme = "README.rst"
 authors = [
     {name = "Adafruit Industries", email = "circuitpython@adafruit.com"}
 ]
-urls = {Homepage = "https://github.com/adafruit/Adafruit_CircuitPython_AY8912_Emulator"}
+urls = {Homepage = "https://github.com/adafruit/Adafruit_CircuitPython_AY8912"}
 keywords = [
     "adafruit",
     "blinka",
