@@ -2,8 +2,8 @@ Introduction
 ============
 
 
-.. image:: https://readthedocs.org/projects/adafruit-circuitpython-ay8912-emulator/badge/?version=latest
-    :target: https://docs.circuitpython.org/projects/ay8912_emulator/en/latest/
+.. image:: https://readthedocs.org/projects/adafruit-circuitpython-ay8912/badge/?version=latest
+    :target: https://docs.circuitpython.org/projects/ay8912/en/latest/
     :alt: Documentation Status
 
 
@@ -12,8 +12,8 @@ Introduction
     :alt: Discord
 
 
-.. image:: https://github.com/adafruit/Adafruit_CircuitPython_AY8912_Emulator/workflows/Build%20CI/badge.svg
-    :target: https://github.com/adafruit/Adafruit_CircuitPython_AY8912_Emulator/actions
+.. image:: https://github.com/adafruit/Adafruit_CircuitPython_AY8912/workflows/Build%20CI/badge.svg
+    :target: https://github.com/adafruit/Adafruit_CircuitPython_AY8912/actions
     :alt: Build Status
 
 
@@ -40,18 +40,18 @@ Installing from PyPI
 =====================
 
 On supported GNU/Linux systems like the Raspberry Pi, you can install the driver locally `from
-PyPI <https://pypi.org/project/adafruit-circuitpython-ay8912-emulator/>`_.
+PyPI <https://pypi.org/project/adafruit-circuitpython-ay8912/>`_.
 To install for current user:
 
 .. code-block:: shell
 
-    pip3 install adafruit-circuitpython-ay8912-emulator
+    pip3 install adafruit-circuitpython-ay8912
 
 To install system-wide (this may be required in some cases):
 
 .. code-block:: shell
 
-    sudo pip3 install adafruit-circuitpython-ay8912-emulator
+    sudo pip3 install adafruit-circuitpython-ay8912
 
 To install in a virtual environment in your current project:
 
@@ -60,7 +60,7 @@ To install in a virtual environment in your current project:
     mkdir project-name && cd project-name
     python3 -m venv .venv
     source .env/bin/activate
-    pip3 install adafruit-circuitpython-ay8912-emulator
+    pip3 install adafruit-circuitpython-ay8912
 
 Installing to a Connected CircuitPython Device with Circup
 ==========================================================
@@ -77,7 +77,7 @@ following command to install:
 
 .. code-block:: shell
 
-    circup install adafruit_ay8912_emulator
+    circup install adafruit_ay8912
 
 Or the following command to update an existing version:
 
@@ -119,7 +119,7 @@ Usage Example
 
 Documentation
 =============
-API documentation for this library can be found on `Read the Docs <https://docs.circuitpython.org/projects/ay8912_emulator/en/latest/>`_.
+API documentation for this library can be found on `Read the Docs <https://docs.circuitpython.org/projects/ay8912/en/latest/>`_.
 
 For information on building library documentation, please check out
 `this guide <https://learn.adafruit.com/creating-and-sharing-a-circuitpython-library/sharing-our-docs-on-readthedocs#sphinx-5-1>`_.
@@ -128,5 +128,5 @@ Contributing
 ============
 
 Contributions are welcome! Please read our `Code of Conduct
-<https://github.com/adafruit/Adafruit_CircuitPython_AY8912_Emulator/blob/HEAD/CODE_OF_CONDUCT.md>`_
+<https://github.com/adafruit/Adafruit_CircuitPython_AY8912/blob/HEAD/CODE_OF_CONDUCT.md>`_
 before contributing to help this project stay welcoming.
