@@ -46,7 +46,7 @@ source_suffix = ".rst"
 master_doc = "index"
 
 # General information about the project.
-project = "Adafruit CircuitPython AY8912_Emulator Library"
+project = "Adafruit CircuitPython AY8912 Library"
 creation_year = "2026"
 current_year = str(datetime.datetime.now().year)
 year_duration = (
@@ -126,7 +126,7 @@ html_css_files = ["custom.css"]
 html_favicon = "_static/favicon.ico"
 
 # Output file base name for HTML help builder.
-htmlhelp_basename = "Adafruit_CircuitPython_Ay8912_emulator_Librarydoc"
+htmlhelp_basename = "Adafruit_CircuitPython_Ay8912_Librarydoc"
 
 # -- Options for LaTeX output ---------------------------------------------
 
@@ -147,8 +147,8 @@ latex_elements = {
 latex_documents = [
     (
         master_doc,
-        "Adafruit_CircuitPython_AY8912_Emulator_Library.tex",
-        "Adafruit CircuitPython AY8912_Emulator Library Documentation",
+        "Adafruit_CircuitPython_AY8912_Library.tex",
+        "Adafruit CircuitPython AY8912 Library Documentation",
         author,
         "manual",
     ),
@@ -161,8 +161,8 @@ latex_documents = [
 man_pages = [
     (
         master_doc,
-        "Adafruit_CircuitPython_AY8912_Emulator_Library",
-        "Adafruit CircuitPython AY8912_Emulator Library Documentation",
+        "Adafruit_CircuitPython_AY8912_Library",
+        "Adafruit CircuitPython AY8912 Library Documentation",
         [author],
         1,
     ),
@@ -176,10 +176,10 @@ man_pages = [
 texinfo_documents = [
     (
         master_doc,
-        "Adafruit_CircuitPython_AY8912_Emulator_Library",
-        "Adafruit CircuitPython AY8912_Emulator Library Documentation",
+        "Adafruit_CircuitPython_AY8912_Library",
+        "Adafruit CircuitPython AY8912 Library Documentation",
         author,
-        "Adafruit_CircuitPython_AY8912_Emulator_Library",
+        "Adafruit_CircuitPython_AY8912_Library",
         "One line description of project.",
         "Miscellaneous",
     ),
